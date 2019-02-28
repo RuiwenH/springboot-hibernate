@@ -42,6 +42,9 @@ public class UserController {
     @GetMapping("/detail")
     public ResResult detail(@RequestParam Integer id) {
         User user = userService.findById(id);
+        user.setEnName("reven");
+        
+        userService.update(user);
         return ResResult.success(user);
     }
  

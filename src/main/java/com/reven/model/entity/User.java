@@ -2,10 +2,15 @@ package com.reven.model.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,6 +25,8 @@ public class User extends BaseEntity implements Serializable {
     @Column(name = "`user_name`")
     private String userName;
 
+    private String enName;
+
     /**
      * @Fields password 密码
      */
@@ -32,6 +39,14 @@ public class User extends BaseEntity implements Serializable {
 
     @Column(name = "`create_time`")
     private Date createTime;
+
+    @OneToOne
+    @JoinColumn(name = "detail_id", referencedColumnName = "id", insertable = false)
+    private UserDetail detail;
+
+    @OneToMany(fetch=FetchType.EAGER)//EAGER，那么表示取出这条数据时，它关联的数据也同时取出放入内存中 
+    @JoinColumn(name = "userId", insertable = false)
+    private List<UserRole> roles;
 
     private static final long serialVersionUID = 1L;
 
@@ -48,7 +63,15 @@ public class User extends BaseEntity implements Serializable {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
+        this.userName = userName;
+    }
+
+    public String getEnName() {
+        return enName;
+    }
+
+    public void setEnName(String enName) {
+        this.enName = enName;
     }
 
     public String getPassword() {
@@ -56,7 +79,7 @@ public class User extends BaseEntity implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
+        this.password = password;
     }
 
     public String getSalt() {
@@ -64,7 +87,7 @@ public class User extends BaseEntity implements Serializable {
     }
 
     public void setSalt(String salt) {
-        this.salt = salt == null ? null : salt.trim();
+        this.salt = salt;
     }
 
     public Date getCreateTime() {
@@ -75,18 +98,20 @@ public class User extends BaseEntity implements Serializable {
         this.createTime = createTime;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", userName=").append(userName);
-        sb.append(", password=").append(password);
-        sb.append(", salt=").append(salt);
-        sb.append(", createTime=").append(createTime);
-        sb.append("]");
-        return sb.toString();
+    public UserDetail getDetail() {
+        return detail;
     }
+
+    public void setDetail(UserDetail detail) {
+        this.detail = detail;
+    }
+
+    public List<UserRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<UserRole> roles) {
+        this.roles = roles;
+    }
+
 }
